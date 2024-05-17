@@ -1,0 +1,127 @@
+{
+  "rules": {
+    "start": {
+      "type": "non-terminal",
+      "generates": [["1"], ["2"], ["3"], ["4"], ["5"], ["6"]]
+    },
+    "1": {
+      "type": "non-terminal",
+      "generates": [
+        ["animal"],
+        ["profissao"],
+        ["objeto"],
+        ["lugar"],
+        ["animal_diminutivo"]
+      ]
+    },
+    "2": {
+      "type": "non-terminal",
+      "generates": [
+        ["animal_diminutivo", "adjetivo_tamanho"],
+        ["animal", "adjetivo_cor"],
+        ["profissao", "adjetivo_qualificacao"],
+        ["profissao", "adjetivo_composto"],
+        ["objeto", "adjetivo_cor"],
+        ["objeto", "adjetivo_tamanho"],
+        ["objeto", "adjetivo_temporal"],
+        ["objeto", "adjetivo_qualificacao"]
+      ]
+    },
+    "3": {
+      "type": "non-terminal",
+      "generates": [
+        ["animal", "adjetivo_composto", "verbo"],
+        ["animal_diminutivo", "adjetivo_qualificacao", "adjetivo_cor"],
+        ["animal", "adjetivo_tamanho", "adjetivo_temporal"],
+        ["profissao", "adjetivo_qualificacao", "adjetivo_qualificacao"],
+        ["profissao", "adjetivo_qualificacao", "verbo"],
+        ["objeto", "adjetivo_cor", "adjetivo_qualificacao"],
+        ["objeto", "adjetivo_temporal", "adjetivo_composto"],
+        ["objeto", "adjetivo_tamanho", "adjetivo_qualificacao"],
+        ["verbo", "adverbio_tempo", "adverbio_intensidade"],
+        ["verbo", "adverbio_frequencia", "adverbio_negacao"]
+      ]
+    },
+    "4": {
+      "type": "non-terminal",
+      "generates": [
+        ["animal_diminutivo", "adjetivo_cor", "adjetivo_temporal"],
+        ["animal", "adjetivo_qualificacao", "preposicao", "objeto"],
+        ["animal_adjetivo_composto", "adjetivo_temporal", "verbo"],
+        ["profissao", "adjetivo_qualificacao", "preposicao", "objeto"],
+        ["profissao", "adjetivo_temporal", "preposicao", "adjetivo_composto"],
+        ["profissao", "adjetivo_tamanho", "preposicao", "verbo"],
+        ["objeto", "adjetivo_composto", "adjetivo_tamanho", "verbo"],
+        ["objeto", "adjetivo_cor", "preposicao", "objeto"],
+        ["objeto", "adjetivo_qualificacao", "preposicao", "objeto"],
+        ["objeto", "adjetivo_tamanho", "adjetivo_temporal", "verbo"],
+        ["verbo", "adverbio_modo", "preposicao", "lugar"],
+        ["verbo", "adverbio_tempo", "preposicao", "objeto"],
+        ["verbo", "preposicao", "adjetivo_temporal", "adverbio_frequencia"]
+      ]
+    },
+    "5": {
+      "type": "non-terminal",
+      "generates": [
+        [
+          "animal_adjetivo_tamanho",
+          "adjetivo_temporal",
+          "preposicao",
+          "objeto"
+        ],
+        ["animal_diminutivo", "preposicao", "objeto", "adjetivo", "verbo"],
+        ["profissao", "adjetivo_temporal", "preposicao", "adjetivo_composto"],
+        ["profissao", "adjetivo_qualificacao", "preposicao", "objeto", "verbo"],
+        [
+          "objeto",
+          "adjetivo_temporal",
+          "preposicao",
+          "adjetivo_composto",
+          "verbo"
+        ],
+        [
+          "verbo",
+          "adjetivo_qualificacao",
+          "preposicao",
+          "lugar",
+          "adverbio_modo"
+        ],
+        ["verbo", "adverbio_tempo", "preposicao", "adjetivo_cor", "verbo"]
+      ]
+    },
+    "6": {
+      "type": "non-terminal",
+      "generates": [
+        [
+          "verbo_no_futuro",
+          "adjetivo_temporal",
+          "preposicao",
+          "lugar",
+          "adjetivo_composto"
+        ],
+        [
+          "animal",
+          "adjetivo_qualificacao",
+          "verbo",
+          "objeto",
+          "preposicao",
+          "local"
+        ],
+        [
+          "verbo_no_presente",
+          "preposicao",
+          "adjetivo_tamanho",
+          "verbo",
+          "objeto"
+        ],
+        [
+          "verbo_no_futuro",
+          "adjetivo_tamanho",
+          "preposicao",
+          "adjetivo_cor",
+          "verbo"
+        ]
+      ]
+    }
+  }
+}
