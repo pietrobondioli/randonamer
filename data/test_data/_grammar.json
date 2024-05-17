@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "start": {
+      "type": "non-terminal",
+      "generates": [["1"], ["2"], ["3"]]
+    },
+    "1": {
+      "type": "non-terminal",
+      "generates": [["animal"]]
+    },
+    "2": {
+      "type": "non-terminal",
+      "generates": [["animal", "adjetivo"]]
+    },
+    "3": {
+      "type": "non-terminal",
+      "generates": [["adjetivo", "adjetivo", "animal"]]
+    },
+    "adjetivo": {
+      "type": "terminal",
+      "generates": [
+        ["pequeno", "grande"],
+        ["pequeno"],
+        ["grande"],
+        ["rosa"],
+        ["vermelho"],
+        ["lindo"],
+        ["feio"]
+      ]
+    }
+  }
+}
