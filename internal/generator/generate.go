@@ -9,7 +9,7 @@ import (
 
 func GenerateCoolname(cfg config.Config) (string, error) {
 	var g grammar.Grammar
-	grammarPath := filepath.Join(cfg.DataPath, cfg.Language)
+	grammarPath := filepath.Join(cfg.DataPath, cfg.Language, cfg.Language)
 	if err := util.AgnosticUnmarshall(grammarPath, cfg.GrammarFile, &g); err != nil {
 		return "", err
 	}

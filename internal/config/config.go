@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"randonamer/internal/util"
 
 	"github.com/adrg/xdg"
 	"github.com/spf13/viper"
@@ -18,45 +17,30 @@ type Config struct {
 
 var DefaultConfig = Config{
 	Language:    "en",
-	DataPath:    filepath.Join(xdg.DataHome, "randonamer", "data"),
+	DataPath:    filepath.Join(xdg.ConfigHome, "randonamer", "data"),
 	GrammarFile: "_grammar",
 }
 
-func InitConfig(cfgFile string, cfg *Config) {
-	configPath := filepath.Join(xdg.ConfigHome, "randonamer")
-	configFile := "config"
-	configFileExt := ".yaml"
-
-	viper.AddConfigPath(configPath)
-	viper.SetConfigName(configFile)
-
-	viper.SetDefault("language", DefaultConfig.Language)
-	viper.SetDefault("data_path", DefaultConfig.DataPath)
-	viper.SetDefault("grammar_file", DefaultConfig.GrammarFile)
-
-	if cfgFile != "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
-		viper.SetConfigFile(filepath.Join(configPath, configFile+configFileExt))
-		viper.SafeWriteConfigAs(filepath.Join(configPath, configFile+configFileExt))
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Can't read config:", err)
-		os.Exit(1)
-	}
-
-	if err := viper.Unmarshal(cfg); err != nil {
-		fmt.Println("Can't unmarshal config:", err)
-		os.Exit(1)
-	}
-
-	// if err := CopyDefaultConfigFiles(DefaultConfig.DataPath, cfg.DataPath); err != nil {
-	// 	fmt.Println("Error copying default config files:", err)
-	// 	os.Exit(1)
-	// }
+func DefaultConfigPath() string {
+	return filepath.Join(xdg.ConfigHome, "randonamer")
 }
 
-func CopyDefaultConfigFiles(srcDir, dstDir string) error {
-	return util.CopyDir(srcDir, dstDir)
+func DefaultConfigFilePath(configPath string) string {
+	return filepath.Join(configPath, "config.yaml")
+}
+
+func WriteDefaultConfig(configFilePath string) {
+	viper.Set("language", DefaultConfig.Language)
+	viper.Set("data_path", DefaultConfig.DataPath)
+	viper.Set("grammar_file", DefaultConfig.GrammarFile)
+
+	if err := os.MkdirAll(filepath.Dir(configFilePath), os.ModePerm); err != nil {
+		fmt.Printf("Error creating config directory: %v\n", err)
+		os.Exit(1)
+	}
+
+	if err := viper.WriteConfigAs(configFilePath); err != nil {
+		fmt.Printf("Error writing config file: %v\n", err)
+		os.Exit(1)
+	}
 }
