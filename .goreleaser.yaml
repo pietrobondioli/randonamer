@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=jcroql
+env:
+  - GO111MODULE=on
+
+before:
+  hooks:
+    - go mod tidy
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+gomod:
+  proxy: true
+
+report_sizes: true
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - HOME={{ .Env.HOME }}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "7"
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=goreleaser
+
+archives:
+  - name_template: >-
+      {{- .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end -}}
+    format: tar.gz
+    files:
+      - data/**
+      - LICENSE
+      - README.md
+
+nfpms:
+  - id: default
+    package_name: randonamer
+    file_name_template: "{{ .ConventionalFileName }}"
+    homepage: https://pietrobondioli.com.br
+    maintainer: Pietro Bondioli <email@pietrobondioli.com.br
+    description: |-
+      A coolname generator with support to many languages and possibility to use custom configuration files.
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+      - termux.deb
+      - archlinux
+    dependencies:
+      - git
+    provides:
+      - randonamer
+    replaces:
+      - randonamer
+    bindir: /usr/bin
+    contents:
+      - src: ./data/config-linux.yaml
+        dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/config.yaml"
+      - src: ./data/en/
+        dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/en/"
+        type: tree
+      - src: ./data/pt_br/
+        dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/pt_br/"
+        type: tree

@@ -1,0 +1,4 @@
+cfgfile: ""
+data_path: $HOME/.config/randonamer/data
+grammar_file: _grammar
+language: en
