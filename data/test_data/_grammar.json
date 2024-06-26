@@ -1,4 +1,5 @@
 {
+  "name_separator": "-",
   "rules": {
     "start": {
       "type": "non-terminal",

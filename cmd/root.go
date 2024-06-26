@@ -2,9 +2,16 @@ package cmd
 
 import (
 	"fmt"
+	"randonamer/internal/config"
 	"randonamer/internal/generator"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+)
+
+var (
+	cfg     config.Config
+	cfgFile string
 )
 
 var rootCmd = &cobra.Command{
@@ -13,10 +20,7 @@ var rootCmd = &cobra.Command{
 	Long: `A coolname generator with support to many languages
   and possibility to use custom configuration files.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		coolname, err := generator.GenerateCoolname(generator.Config{
-			Language:   generator.Language(cmd.Flag("language").Value.String()),
-			ConfigPath: cmd.Flag("config").Value.String(),
-		})
+		coolname, err := generator.GenerateCoolname(cfg)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -30,6 +34,22 @@ func Execute() error {
 }
 
 func init() {
+	cobra.OnInitialize(initConfig)
+
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "cfgFile", "c", "", "path to custom configuration file")
+	viper.BindPFlag("cfgFile", rootCmd.PersistentFlags().Lookup("cfgFile"))
+
 	rootCmd.PersistentFlags().StringP("language", "l", "en", "language to generate coolname")
-	rootCmd.PersistentFlags().StringP("config", "c", "", "path to custom configuration file")
+	viper.BindPFlag("language", rootCmd.PersistentFlags().Lookup("language"))
+
+	rootCmd.PersistentFlags().String("data_path", "", "path to data directory")
+	viper.BindPFlag("data_path", rootCmd.PersistentFlags().Lookup("data_path"))
+
+	rootCmd.PersistentFlags().String("grammar_file", "", "path to grammar file")
+	viper.BindPFlag("grammar_file", rootCmd.PersistentFlags().Lookup("grammar_file"))
+}
+
+func initConfig() {
+	config.InitConfig(cfgFile, &cfg)
+	fmt.Printf("%+v\n", cfg)
 }
