@@ -48,6 +48,9 @@ archives:
       - LICENSE
       - README.md
 
+signs:
+  - artifacts: checksum
+
 nfpms:
   - id: default
     package_name: randonamer
