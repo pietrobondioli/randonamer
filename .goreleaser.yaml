@@ -90,11 +90,11 @@ nfpms:
           mode: 0644
 
 aurs:
-  - homepage: "https://github.com/pietrobondioli/randonamer"
+  - homepage: https://github.com/pietrobondioli/randonamer
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     maintainers:
       - "Pietro Bondioli <email@pietrobondioli.com.br>"
-    license: "MIT"
+    license: MIT
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/randonamer-bin.git"
     package: |-
@@ -119,4 +119,31 @@ nix:
     homepage: https://github.com/pietrobondioli/randonamer
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     path: pkgs/randonamer/default.nix
-    license: "MIT"
+    license: MIT
+
+winget:
+  - name: randonamer
+    publisher: randonamer
+    license: MIT
+    homepage: https://github.com/pietrobondioli/randonamer
+    short_description: "A coolname generator with support to many languages and possibility to use custom configuration files."
+    repository:
+      owner: randonamer
+      name: winget-pkgs
+      branch: "randonamer-{{.Version}}"
+      pull_request:
+        enabled: true
+        draft: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
+
+scoops:
+  - repository:
+      owner: randonamer
+      name: scoop-bucket
+    directory: bucket
+    homepage: https://github.com/pietrobondioli/randonamer
+    description: "A coolname generator with support to many languages and possibility to use custom configuration files."
+    license: MIT
