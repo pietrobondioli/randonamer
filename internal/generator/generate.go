@@ -9,14 +9,15 @@ import (
 
 func GenerateCoolname(cfg config.Config) (string, error) {
 	var g grammar.Grammar
-	grammarPath := filepath.Join(cfg.DataPath, cfg.Language, cfg.Language)
-	if err := util.AgnosticUnmarshall(grammarPath, cfg.GrammarFile, &g); err != nil {
+	realDataPath := filepath.Join(cfg.DataPath, cfg.Language)
+	grammarPath := filepath.Join(realDataPath, cfg.GrammarFile)
+	if err := util.AgnosticUnmarshall(grammarPath, &g); err != nil {
 		return "", err
 	}
 
 	var coolname string
 
-	grammar.ProcessGrammar(cfg.DataPath, g, g.Rules["start"], &coolname)
+	grammar.ProcessGrammar(realDataPath, g, g.Rules["start"], &coolname)
 
 	return coolname, nil
 }

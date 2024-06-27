@@ -11,10 +11,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// FileExists checks if a file exists, regardless of its extension.
 func FileExists(path string) bool {
-	_, err := os.Stat(path)
-
-	return err == nil
+	matches, err := filepath.Glob(path + ".*")
+	DebugLog("Checking if file exists with pattern: %s.*, found matches: %v, error: %v", path, matches, err)
+	if err != nil {
+		return false
+	}
+	return len(matches) > 0
 }
 
 var (
@@ -23,6 +27,7 @@ var (
 )
 
 func ReadFirst(prefix string) ([]byte, string, error) {
+	DebugLog("Reading first file with prefix: %s", prefix)
 	paths, err := filepath.Glob(prefix + ".*")
 	if err != nil {
 		return nil, "", err
@@ -37,11 +42,13 @@ func ReadFirst(prefix string) ([]byte, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
+	DebugLog("Read file: %s, extension: %s", paths[0], filepath.Ext(paths[0]))
 	return content, filepath.Ext(paths[0]), nil
 }
 
-func AgnosticUnmarshall[T any](path, file string, e *T) error {
-	content, ext, err := ReadFirst(filepath.Join(path, file))
+func AgnosticUnmarshall[T any](path string, e *T) error {
+	DebugLog("Unmarshalling file in path: %s", path)
+	content, ext, err := ReadFirst(path)
 	if err != nil {
 		return fmt.Errorf("failed to read file: %w", err)
 	}
@@ -59,10 +66,12 @@ func AgnosticUnmarshall[T any](path, file string, e *T) error {
 		return fmt.Errorf("failed to unmarshal file: %w", err)
 	}
 
+	DebugLog("Unmarshalled file: %s, result: %+v", path, e)
 	return nil
 }
 
 func CopyDir(src, dest string) error {
+	DebugLog("Copying directory from %s to %s", src, dest)
 	entries, err := os.ReadDir(src)
 	if err != nil {
 		return err
@@ -90,6 +99,7 @@ func CopyDir(src, dest string) error {
 }
 
 func CopyFile(src, dest string) error {
+	DebugLog("Copying file from %s to %s", src, dest)
 	in, err := os.Open(src)
 	if err != nil {
 		return err

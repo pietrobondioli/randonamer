@@ -2,6 +2,7 @@ package grammar
 
 import (
 	"math/rand"
+	"path/filepath"
 	"randonamer/internal/util"
 )
 
@@ -31,9 +32,9 @@ func ProcessGrammar(dataPath string, grammar Grammar, currRule Rule, result *str
 
 			if ok {
 				ProcessGrammar(dataPath, grammar, nextRule, result)
-			} else if util.FileExists(dataPath + symbol + ".json") {
+			} else if util.FileExists(filepath.Join(dataPath, symbol)) {
 				var externalRule Rule
-				util.AgnosticUnmarshall(dataPath, symbol, &externalRule)
+				util.AgnosticUnmarshall(filepath.Join(dataPath, symbol), &externalRule)
 				ProcessGrammar(dataPath, grammar, externalRule, result)
 			}
 		}
