@@ -76,28 +76,27 @@ nfpms:
     contents:
       - src: ./data/config-linux.yaml
         dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/config.yaml"
+        file_info:
+          mode: 0644
       - src: ./data/en/
         dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/en/"
         type: tree
+        file_info:
+          mode: 0644
       - src: ./data/pt_br/
         dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/pt_br/"
         type: tree
+        file_info:
+          mode: 0644
 
 aurs:
-  - name: randonamer-bin
-    homepage: "https://pietrobondioli.com.br"
+  - homepage: "https://github.com/pietrobondioli/randonamer"
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     maintainers:
       - "Pietro Bondioli <email@pietrobondioli.com.br>"
     license: "MIT"
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/randonamer-bin.git"
-    provides:
-      - randonamer
-    conflicts:
-      - randonamer
-    depends:
-      - git
     package: |-
       # bin
       install -Dm755 "./randonamer" "${pkgdir}/usr/bin/randonamer"
@@ -112,8 +111,12 @@ aurs:
       install -d "${pkgdir}${HOME}/.config/randonamer/data/pt_br"
       install -Dm644 "./data/pt_br/*" "${pkgdir}${HOME}/.config/randonamer/data/pt_br/"
 
-    commit_author:
-      name: goreleaserbot
-      email: bot@goreleaser.com
-    commit_msg_template: "Update to {{ .Tag }}"
-    skip_upload: false
+nix:
+  - name: randonamer
+    repository:
+      owner: pietrobondioli
+      name: randonamer
+    homepage: https://github.com/pietrobondioli/randonamer
+    description: "A coolname generator with support to many languages and possibility to use custom configuration files."
+    path: pkgs/randonamer/default.nix
+    license: "MIT"
