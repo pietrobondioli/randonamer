@@ -64,26 +64,33 @@ builds:
       - arm64
     goarm:
       - "7"
+    ignore:
+      - goos: windows
+        goarch: arm
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.builtBy=goreleaser
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{ .CommitDate }} -X main.treeState={{ .IsGitDirty }}
 
 archives:
   - name_template: >-
       {{- .ProjectName }}_
-      {{- .Version }}_
-      {{- .Os }}_
+      {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end -}}
-    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
+    builds_info:
+      group: root
+      owner: root
     files:
       - data/**
       - LICENSE
       - README.md
-
-signs:
-  - artifacts: checksum
 
 nfpms:
   - id: default
@@ -93,7 +100,7 @@ nfpms:
     maintainer: Pietro Bondioli <email@pietrobondioli.com.br
     description: |-
       A coolname generator with support to many languages and possibility to use custom configuration files.
-    license: MIT
+    license: mit
     formats:
       - apk
       - deb
@@ -116,19 +123,19 @@ nfpms:
         dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/en/"
         type: tree
         file_info:
-          mode: 0644
+          mode: 0755
       - src: ./data/pt_br/
         dst: "{{ .Env.HOME }}/.config/{{ .ProjectName }}/data/pt_br/"
         type: tree
         file_info:
-          mode: 0644
+          mode: 0755
 
 aurs:
   - homepage: https://github.com/pietrobondioli/randonamer
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     maintainers:
       - "Pietro Bondioli <email@pietrobondioli.com.br>"
-    license: MIT
+    license: mit
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/randonamer-bin.git"
     package: |-
@@ -153,12 +160,12 @@ nix:
     homepage: https://github.com/pietrobondioli/randonamer
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     path: pkgs/randonamer/default.nix
-    license: MIT
+    license: mit
 
 winget:
   - name: randonamer
     publisher: randonamer
-    license: MIT
+    license: mit
     homepage: https://github.com/pietrobondioli/randonamer
     short_description: "A coolname generator with support to many languages and possibility to use custom configuration files."
     repository:
@@ -180,4 +187,4 @@ scoops:
     directory: bucket
     homepage: https://github.com/pietrobondioli/randonamer
     description: "A coolname generator with support to many languages and possibility to use custom configuration files."
-    license: MIT
+    license: mit

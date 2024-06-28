@@ -73,3 +73,9 @@ tasks:
       - git tag {{.NEXT}}
       - echo {{.NEXT}}
       - git push origin --tags
+
+  goreleaser-install-local:
+    desc: Generates binaries and install it with yay
+    cmds:
+      - goreleaser release --snapshot --skip=publish --clean
+      - yay -U dist/randonamer-0.0.1next-1-x86_64.pkg.tar.zst
