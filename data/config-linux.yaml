@@ -1,4 +1,5 @@
 cfgfile: ""
-data_path: $HOME/.config/randonamer/data
-grammar_file: _grammar
 language: en
+data-path: $HOME/.config/randonamer/data
+grammar-file: _grammar
+start-point: "start"

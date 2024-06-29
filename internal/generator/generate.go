@@ -16,8 +16,9 @@ func GenerateCoolname(cfg config.Config) (string, error) {
 	}
 
 	var coolname string
+	startPoint := g.Rules[cfg.StartPoint]
 
-	grammar.ProcessGrammar(realDataPath, g, g.Rules["start"], &coolname)
+	grammar.ProcessGrammar(realDataPath, g, startPoint, &coolname)
 
 	return coolname, nil
 }

@@ -41,17 +41,19 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "cfgFile", "c", "", "path to custom configuration file")
-	rootCmd.PersistentFlags().BoolVar(&debug, "DEBUG", false, "enable debug logging")
-	rootCmd.PersistentFlags().StringP("language", "l", "", "language to generate coolname")
-	rootCmd.PersistentFlags().String("data_path", "", "path to data directory")
-	rootCmd.PersistentFlags().String("grammar_file", "", "path to grammar file")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, config.ConfigFileKey, config.ConfigFileShort, "", "path to custom configuration file")
+	rootCmd.PersistentFlags().BoolVarP(&debug, config.DEBUGKey, config.DEBUGShort, false, "enable debug logging")
+	rootCmd.PersistentFlags().StringP(config.LanguageKey, config.LanguageShort, "", "language to generate coolname")
+	rootCmd.PersistentFlags().StringP(config.DataPathKey, config.DataPathShort, "", "path to data directory")
+	rootCmd.PersistentFlags().StringP(config.GrammarFileKey, config.GrammarFileShort, "", "path to grammar file")
+	rootCmd.PersistentFlags().StringP(config.StartPointKey, config.StartPointShort, "", "start point for grammar")
 
-	viper.BindPFlag("cfgFile", rootCmd.PersistentFlags().Lookup("cfgFile"))
-	viper.BindPFlag("DEBUG", rootCmd.PersistentFlags().Lookup("DEBUG"))
-	viper.BindPFlag("language", rootCmd.PersistentFlags().Lookup("language"))
-	viper.BindPFlag("data_path", rootCmd.PersistentFlags().Lookup("data_path"))
-	viper.BindPFlag("grammar_file", rootCmd.PersistentFlags().Lookup("grammar_file"))
+	viper.BindPFlag(config.ConfigFileKey, rootCmd.PersistentFlags().Lookup(config.ConfigFileKey))
+	viper.BindPFlag(config.DEBUGKey, rootCmd.PersistentFlags().Lookup(config.DEBUGKey))
+	viper.BindPFlag(config.LanguageKey, rootCmd.PersistentFlags().Lookup(config.LanguageKey))
+	viper.BindPFlag(config.DataPathKey, rootCmd.PersistentFlags().Lookup(config.DataPathKey))
+	viper.BindPFlag(config.GrammarFileKey, rootCmd.PersistentFlags().Lookup(config.GrammarFileKey))
+	viper.BindPFlag(config.StartPointKey, rootCmd.PersistentFlags().Lookup(config.StartPointKey))
 }
 
 func initConfig() {
@@ -75,9 +77,10 @@ func initConfig() {
 		os.Exit(1)
 	}
 
-	viper.SetDefault("language", config.DefaultConfig.Language)
-	viper.SetDefault("data_path", config.DefaultConfig.DataPath)
-	viper.SetDefault("grammar_file", config.DefaultConfig.GrammarFile)
+	viper.SetDefault(config.LanguageKey, config.DefaultConfig.Language)
+	viper.SetDefault(config.DataPathKey, config.DefaultConfig.DataPath)
+	viper.SetDefault(config.GrammarFileKey, config.DefaultConfig.GrammarFile)
+	viper.SetDefault(config.StartPointKey, config.DefaultConfig.StartPoint)
 
 	if err := viper.Unmarshal(&cfg); err != nil {
 		fmt.Printf("Can't unmarshal config: %v\n", err)
@@ -95,13 +98,16 @@ func expandConfigPaths() {
 }
 
 func overrideConfigWithFlags() {
-	if viper.IsSet("language") && viper.GetString("language") != "" {
-		cfg.Language = viper.GetString("language")
+	if viper.IsSet(config.LanguageKey) && viper.GetString(config.LanguageKey) != "" {
+		cfg.Language = viper.GetString(config.LanguageKey)
 	}
-	if viper.IsSet("data_path") && viper.GetString("data_path") != "" {
-		cfg.DataPath = os.ExpandEnv(viper.GetString("data_path"))
+	if viper.IsSet(config.DataPathKey) && viper.GetString(config.DataPathKey) != "" {
+		cfg.DataPath = os.ExpandEnv(viper.GetString(config.DataPathKey))
 	}
-	if viper.IsSet("grammar_file") && viper.GetString("grammar_file") != "" {
-		cfg.GrammarFile = os.ExpandEnv(viper.GetString("grammar_file"))
+	if viper.IsSet(config.GrammarFileKey) && viper.GetString(config.GrammarFileKey) != "" {
+		cfg.GrammarFile = os.ExpandEnv(viper.GetString(config.GrammarFileKey))
+	}
+	if viper.IsSet(config.StartPointKey) && viper.GetString(config.StartPointKey) != "" {
+		cfg.StartPoint = viper.GetString(config.StartPointKey)
 	}
 }
